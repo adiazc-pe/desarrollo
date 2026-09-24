@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modelo Atómico de Bohr</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #030712;
+      color: #e2e8f0;
+      font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Starfield background ── */
+    #starfield {
+      position: fixed; inset: 0; z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── Layout ── */
+    .app-shell {
+      position: relative; z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 20px 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* ── Header ── */
+    .header {
+      text-align: center;
+    }
+    .header h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1.5rem, 4vw, 2.4rem);
+      font-weight: 900;
+      letter-spacing: .12em;
+      background: linear-gradient(135deg, #38bdf8, #818cf8, #e879f9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: none;
+    }
+    .header p {
+      margin-top: 6px;
+      font-size: .95rem;
+      color: #64748b;
+      letter-spacing: .06em;
+    }
+
+    /* ── Search bar ── */
+    .search-card {
+      background: rgba(15,23,42,.7);
+      border: 1px solid rgba(99,102,241,.25);
+      border-radius: 16px;
+      padding: 20px 24px;
+      backdrop-filter: blur(12px);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: flex-end;
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1 1 220px;
+    }
+    .input-group label {
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: #818cf8;
+      font-weight: 600;
+    }
+    .input-row {
+      display: flex;
+      gap: 10px;
+    }
+    input[type="number"] {
+      flex: 1;
+      background: rgba(30,41,59,.8);
+      border: 1px solid rgba(99,102,241,.4);
+      border-radius: 10px;
+      padding: 10px 16px;
+      color: #e2e8f0;
+      font-size: 1.1rem;
+      font-family: 'Orbitron', monospace;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    input[type="number"]:focus {
+      border-color: #818cf8;
+      box-shadow: 0 0 0 3px rgba(129,140,248,.2);
+    }
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+    .btn-visualize {
+      padding: 10px 28px;
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-family: 'Orbitron', monospace;
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s;
+      white-space: nowrap;
+    }
+    .btn-visualize:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(79,70,229,.45);
+    }
+    .btn-visualize:active { transform: translateY(0); }
+
+    /* Quick select pills */
+    .quick-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .quick-pills span {
+      font-size: .7rem;
+      color: #64748b;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .pill {
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(99,102,241,.35);
+      background: rgba(30,41,59,.6);
+      color: #a5b4fc;
+      font-size: .78rem;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .pill:hover {
+      background: rgba(79,70,229,.3);
+      border-color: #818cf8;
+      color: #e2e8f0;
+    }
+
+    /* ── Main content ── */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 20px;
+    }
+    @media (max-width: 860px) {
+      .main-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Canvas card ── */
+    .canvas-card {
+      background: rgba(15,23,42,.65);
+      border: 1px solid rgba(99,102,241,.2);
+      border-radius: 20px;
+      padding: 24px;
+      backdrop-filter: blur(14px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    #atomCanvas {
+      width: 100%;
+      max-width: 520px;
+      border-radius: 14px;
+      background: radial-gradient(ellipse at 50% 55%, #0f172a 0%, #030712 70%);
+      display: block;
+    }
+
+    /* ── Info panel ── */
+    .info-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .element-card {
+      background: rgba(15,23,42,.75);
+      border: 1px solid rgba(99,102,241,.25);
+      border-radius: 16px;
+      padding: 20px;
+      backdrop-filter: blur(12px);
+      text-align: center;
+    }
+    .element-symbol {
+      font-family: 'Orbitron', monospace;
+      font-size: 4rem;
+      font-weight: 900;
+      line-height: 1;
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .element-name {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-top: 6px;
+      color: #e2e8f0;
+      letter-spacing: .05em;
+    }
+    .element-atomic {
+      font-size: .85rem;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .stat-box {
+      background: rgba(30,41,59,.6);
+      border: 1px solid rgba(99,102,241,.2);
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+    }
+    .stat-box .val {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+    .stat-box .lbl {
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #64748b;
+      margin-top: 2px;
+    }
+    .proton-val { color: #f87171; }
+    .neutron-val { color: #94a3b8; }
+    .electron-val { color: #60a5fa; }
+    .mass-val { color: #a78bfa; }
+
+    /* ── Shell legend ── */
+    .shells-card {
+      background: rgba(15,23,42,.75);
+      border: 1px solid rgba(99,102,241,.25);
+      border-radius: 16px;
+      padding: 18px 20px;
+      backdrop-filter: blur(12px);
+    }
+    .shells-card h3 {
+      font-family: 'Orbitron', monospace;
+      font-size: .75rem;
+      letter-spacing: .12em;
+      color: #818cf8;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+    .shell-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(99,102,241,.1);
+    }
+    .shell-row:last-child { border-bottom: none; }
+    .shell-dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .shell-label {
+      font-size: .82rem;
+      color: #94a3b8;
+      flex: 1;
+    }
+    .shell-count {
+      font-family: 'Orbitron', monospace;
+      font-size: .82rem;
+      font-weight: 700;
+      color: #e2e8f0;
+    }
+
+    /* ── Config card ── */
+    .config-card {
+      background: rgba(15,23,42,.75);
+      border: 1px solid rgba(99,102,241,.25);
+      border-radius: 16px;
+      padding: 18px 20px;
+      backdrop-filter: blur(12px);
+    }
+    .config-card h3 {
+      font-family: 'Orbitron', monospace;
+      font-size: .75rem;
+      letter-spacing: .12em;
+      color: #818cf8;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .config-string {
+      font-family: 'Orbitron', monospace;
+      font-size: .72rem;
+      line-height: 1.7;
+      color: #c4b5fd;
+      word-break: break-all;
+    }
+
+    /* ── Controls ── */
+    .controls-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .toggle-anim {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      user-select: none;
+      font-size: .8rem;
+      color: #94a3b8;
+    }
+    .toggle-anim input { display: none; }
+    .toggle-track {
+      width: 36px; height: 20px;
+      border-radius: 10px;
+      background: rgba(30,41,59,.8);
+      border: 1px solid rgba(99,102,241,.4);
+      position: relative;
+      transition: background .2s;
+    }
+    .toggle-track::after {
+      content: '';
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: #64748b;
+      transition: transform .2s, background .2s;
+    }
+    input:checked + .toggle-track {
+      background: rgba(79,70,229,.4);
+      border-color: #818cf8;
+    }
+    input:checked + .toggle-track::after {
+      transform: translateX(16px);
+      background: #818cf8;
+    }
+
+    /* ── Speed slider ── */
+    .speed-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: .78rem;
+      color: #64748b;
+    }
+    input[type="range"] {
+      -webkit-appearance: none;
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(99,102,241,.3);
+      outline: none;
+      flex: 1;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: #818cf8;
+      cursor: pointer;
+    }
+
+    /* ── Empty state ── */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 40px 20px;
+      color: #334155;
+    }
+    .empty-state .atom-icon { font-size: 4rem; }
+    .empty-state p { font-size: .9rem; color: #475569; text-align: center; }
+
+    /* ── Tooltip ── */
+    .tooltip {
+      position: absolute;
+      background: rgba(15,23,42,.95);
+      border: 1px solid rgba(129,140,248,.4);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: .78rem;
+      color: #e2e8f0;
+      pointer-events: none;
+      z-index: 100;
+      white-space: nowrap;
+      display: none;
+    }
+
+    /* ── Error msg ── */
+    .error-msg {
+      color: #f87171;
+      font-size: .82rem;
+      padding: 8px 12px;
+      background: rgba(248,113,113,.08);
+      border: 1px solid rgba(248,113,113,.2);
+      border-radius: 8px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Starfield canvas -->
+<canvas id="starfield"></canvas>
+
+<div class="app-shell">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>⚛ MODELO ATÓMICO DE BOHR</h1>
+    <p>Visualización Interactiva · Todos los elementos (Z = 1 – 118)</p>
+  </div>
+
+  <!-- Search -->
+  <div class="search-card">
+    <div class="input-group">
+      <label>Número Atómico (Z)</label>
+      <div class="input-row">
+        <input type="number" id="atomicInput" min="1" max="118" placeholder="1 – 118" value="" />
+        <button class="btn-visualize" onclick="buildAtom()">VISUALIZAR</button>
+      </div>
+      <div class="error-msg" id="errorMsg">Por favor ingresa un número entre 1 y 118.</div>
+    </div>
+    <div>
+      <div class="quick-pills">
+        <span>Ejemplos:</span>
+        <div class="pill" onclick="quickSet(1)">H</div>
+        <div class="pill" onclick="quickSet(2)">He</div>
+        <div class="pill" onclick="quickSet(6)">C</div>
+        <div class="pill" onclick="quickSet(8)">O</div>
+        <div class="pill" onclick="quickSet(11)">Na</div>
+        <div class="pill" onclick="quickSet(17)">Cl</div>
+        <div class="pill" onclick="quickSet(26)">Fe</div>
+        <div class="pill" onclick="quickSet(47)">Ag</div>
+        <div class="pill" onclick="quickSet(79)">Au</div>
+        <div class="pill" onclick="quickSet(92)">U</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main grid -->
+  <div class="main-grid" id="mainGrid" style="display:none">
+
+    <!-- Canvas -->
+    <div class="canvas-card">
+      <canvas id="atomCanvas" width="520" height="520"></canvas>
+      <div class="controls-row">
+        <label class="toggle-anim">
+          <input type="checkbox" id="animToggle" checked onchange="toggleAnim()">
+          <div class="toggle-track"></div>
+          <span>Animación</span>
+        </label>
+        <div class="speed-row" style="flex:1">
+          <span>Velocidad:</span>
+          <input type="range" id="speedSlider" min="0.2" max="4" step="0.1" value="1" oninput="updateSpeed()">
+          <span id="speedVal">1×</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right panel -->
+    <div class="info-panel">
+
+      <!-- Element card -->
+      <div class="element-card">
+        <div class="element-symbol" id="elSymbol">—</div>
+        <div class="element-name" id="elName">—</div>
+        <div class="element-atomic" id="elAtomic">—</div>
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="val proton-val" id="statP">—</div>
+            <div class="lbl">🔴 Protones</div>
+          </div>
+          <div class="stat-box">
+            <div class="val neutron-val" id="statN">—</div>
+            <div class="lbl">⚫ Neutrones</div>
+          </div>
+          <div class="stat-box">
+            <div class="val electron-val" id="statE">—</div>
+            <div class="lbl">🔵 Electrones</div>
+          </div>
+          <div class="stat-box">
+            <div class="val mass-val" id="statM">—</div>
+            <div class="lbl">⚗ Masa Atómica</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shell legend -->
+      <div class="shells-card">
+        <h3>Capas Electrónicas</h3>
+        <div id="shellLegend"></div>
+      </div>
+
+      <!-- Config card -->
+      <div class="config-card">
+        <h3>Configuración Electrónica</h3>
+        <div class="config-string" id="configStr">—</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty-state" id="emptyState">
+    <div class="atom-icon">⚛</div>
+    <p>Ingresa un número atómico (1–118) y presiona<br><strong>VISUALIZAR</strong> para explorar el átomo.</p>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  ELEMENT DATABASE  (symbol, name, mass, category)
+// ═══════════════════════════════════════════════════
+const ELEMENTS = [
+  null, // index 0 unused
+  {s:'H',  n:'Hidrógeno',     m:1.008,   c:'nonmetal'},
+  {s:'He', n:'Helio',         m:4.003,   c:'noble'},
+  {s:'Li', n:'Litio',         m:6.941,   c:'alkali'},
+  {s:'Be', n:'Berilio',       m:9.012,   c:'alkaline'},
+  {s:'B',  n:'Boro',          m:10.811,  c:'metalloid'},
+  {s:'C',  n:'Carbono',       m:12.011,  c:'nonmetal'},
+  {s:'N',  n:'Nitrógeno',     m:14.007,  c:'nonmetal'},
+  {s:'O',  n:'Oxígeno',       m:15.999,  c:'nonmetal'},
+  {s:'F',  n:'Flúor',         m:18.998,  c:'halogen'},
+  {s:'Ne', n:'Neón',          m:20.180,  c:'noble'},
+  {s:'Na', n:'Sodio',         m:22.990,  c:'alkali'},
+  {s:'Mg', n:'Magnesio',      m:24.305,  c:'alkaline'},
+  {s:'Al', n:'Aluminio',      m:26.982,  c:'post-transition'},
+  {s:'Si', n:'Silicio',       m:28.086,  c:'metalloid'},
+  {s:'P',  n:'Fósforo',       m:30.974,  c:'nonmetal'},
+  {s:'S',  n:'Azufre',        m:32.065,  c:'nonmetal'},
+  {s:'Cl', n:'Cloro',         m:35.453,  c:'halogen'},
+  {s:'Ar', n:'Argón',         m:39.948,  c:'noble'},
+  {s:'K',  n:'Potasio',       m:39.098,  c:'alkali'},
+  {s:'Ca', n:'Calcio',        m:40.078,  c:'alkaline'},
+  {s:'Sc', n:'Escandio',      m:44.956,  c:'transition'},
+  {s:'Ti', n:'Titanio',       m:47.867,  c:'transition'},
+  {s:'V',  n:'Vanadio',       m:50.942,  c:'transition'},
+  {s:'Cr', n:'Cromo',         m:51.996,  c:'transition'},
+  {s:'Mn', n:'Manganeso',     m:54.938,  c:'transition'},
+  {s:'Fe', n:'Hierro',        m:55.845,  c:'transition'},
+  {s:'Co', n:'Cobalto',       m:58.933,  c:'transition'},
+  {s:'Ni', n:'Níquel',        m:58.693,  c:'transition'},
+  {s:'Cu', n:'Cobre',         m:63.546,  c:'transition'},
+  {s:'Zn', n:'Zinc',          m:65.38,   c:'transition'},
+  {s:'Ga', n:'Galio',         m:69.723,  c:'post-transition'},
+  {s:'Ge', n:'Germanio',      m:72.630,  c:'metalloid'},
+  {s:'As', n:'Arsénico',      m:74.922,  c:'metalloid'},
+  {s:'Se', n:'Selenio',       m:78.971,  c:'nonmetal'},
+  {s:'Br', n:'Bromo',         m:79.904,  c:'halogen'},
+  {s:'Kr', n:'Kriptón',       m:83.798,  c:'noble'},
+  {s:'Rb', n:'Rubidio',       m:85.468,  c:'alkali'},
+  {s:'Sr', n:'Estroncio',     m:87.62,   c:'alkaline'},
+  {s:'Y',  n:'Itrio',         m:88.906,  c:'transition'},
+  {s:'Zr', n:'Circonio',      m:91.224,  c:'transition'},
+  {s:'Nb', n:'Niobio',        m:92.906,  c:'transition'},
+  {s:'Mo', n:'Molibdeno',     m:95.96,   c:'transition'},
+  {s:'Tc', n:'Tecnecio',      m:98,      c:'transition'},
+  {s:'Ru', n:'Rutenio',       m:101.07,  c:'transition'},
+  {s:'Rh', n:'Rodio',         m:102.906, c:'transition'},
+  {s:'Pd', n:'Paladio',       m:106.42,  c:'transition'},
+  {s:'Ag', n:'Plata',         m:107.868, c:'transition'},
+  {s:'Cd', n:'Cadmio',        m:112.411, c:'transition'},
+  {s:'In', n:'Indio',         m:114.818, c:'post-transition'},
+  {s:'Sn', n:'Estaño',        m:118.710, c:'post-transition'},
+  {s:'Sb', n:'Antimonio',     m:121.760, c:'metalloid'},
+  {s:'Te', n:'Telurio',       m:127.60,  c:'metalloid'},
+  {s:'I',  n:'Yodo',          m:126.904, c:'halogen'},
+  {s:'Xe', n:'Xenón',         m:131.293, c:'noble'},
+  {s:'Cs', n:'Cesio',         m:132.905, c:'alkali'},
+  {s:'Ba', n:'Bario',         m:137.327, c:'alkaline'},
+  {s:'La', n:'Lantano',       m:138.905, c:'lanthanide'},
+  {s:'Ce', n:'Cerio',         m:140.116, c:'lanthanide'},
+  {s:'Pr', n:'Praseodimio',   m:140.908, c:'lanthanide'},
+  {s:'Nd', n:'Neodimio',      m:144.242, c:'lanthanide'},
+  {s:'Pm', n:'Prometio',      m:145,     c:'lanthanide'},
+  {s:'Sm', n:'Samario',       m:150.36,  c:'lanthanide'},
+  {s:'Eu', n:'Europio',       m:151.964, c:'lanthanide'},
+  {s:'Gd', n:'Gadolinio',     m:157.25,  c:'lanthanide'},
+  {s:'Tb', n:'Terbio',        m:158.925, c:'lanthanide'},
+  {s:'Dy', n:'Disprosio',     m:162.500, c:'lanthanide'},
+  {s:'Ho', n:'Holmio',        m:164.930, c:'lanthanide'},
+  {s:'Er', n:'Erbio',         m:167.259, c:'lanthanide'},
+  {s:'Tm', n:'Tulio',         m:168.934, c:'lanthanide'},
+  {s:'Yb', n:'Iterbio',       m:173.054, c:'lanthanide'},
+  {s:'Lu', n:'Lutecio',       m:174.967, c:'lanthanide'},
+  {s:'Hf', n:'Hafnio',        m:178.49,  c:'transition'},
+  {s:'Ta', n:'Tántalo',       m:180.948, c:'transition'},
+  {s:'W',  n:'Wolframio',     m:183.84,  c:'transition'},
+  {s:'Re', n:'Renio',         m:186.207, c:'transition'},
+  {s:'Os', n:'Osmio',         m:190.23,  c:'transition'},
+  {s:'Ir', n:'Iridio',        m:192.217, c:'transition'},
+  {s:'Pt', n:'Platino',       m:195.084, c:'transition'},
+  {s:'Au', n:'Oro',           m:196.967, c:'transition'},
+  {s:'Hg', n:'Mercurio',      m:200.59,  c:'transition'},
+  {s:'Tl', n:'Talio',         m:204.383, c:'post-transition'},
+  {s:'Pb', n:'Plomo',         m:207.2,   c:'post-transition'},
+  {s:'Bi', n:'Bismuto',       m:208.980, c:'post-transition'},
+  {s:'Po', n:'Polonio',       m:209,     c:'post-transition'},
+  {s:'At', n:'Ástato',        m:210,     c:'halogen'},
+  {s:'Rn', n:'Radón',         m:222,     c:'noble'},
+  {s:'Fr', n:'Francio',       m:223,     c:'alkali'},
+  {s:'Ra', n:'Radio',         m:226,     c:'alkaline'},
+  {s:'Ac', n:'Actinio',       m:227,     c:'actinide'},
+  {s:'Th', n:'Torio',         m:232.038, c:'actinide'},
+  {s:'Pa', n:'Protactinio',   m:231.036, c:'actinide'},
+  {s:'U',  n:'Uranio',        m:238.029, c:'actinide'},
+  {s:'Np', n:'Neptunio',      m:237,     c:'actinide'},
+  {s:'Pu', n:'Plutonio',      m:244,     c:'actinide'},
+  {s:'Am', n:'Americio',      m:243,     c:'actinide'},
+  {s:'Cm', n:'Curio',         m:247,     c:'actinide'},
+  {s:'Bk', n:'Berkelio',      m:247,     c:'actinide'},
+  {s:'Cf', n:'Californio',    m:251,     c:'actinide'},
+  {s:'Es', n:'Einstenio',     m:252,     c:'actinide'},
+  {s:'Fm', n:'Fermio',        m:257,     c:'actinide'},
+  {s:'Md', n:'Mendelevio',    m:258,     c:'actinide'},
+  {s:'No', n:'Nobelio',       m:259,     c:'actinide'},
+  {s:'Lr', n:'Lawrencio',     m:262,     c:'actinide'},
+  {s:'Rf', n:'Rutherfordio',  m:267,     c:'transition'},
+  {s:'Db', n:'Dubnio',        m:270,     c:'transition'},
+  {s:'Sg', n:'Seaborgio',     m:271,     c:'transition'},
+  {s:'Bh', n:'Bohrio',        m:270,     c:'transition'},
+  {s:'Hs', n:'Hassio',        m:277,     c:'transition'},
+  {s:'Mt', n:'Meitnerio',     m:276,     c:'transition'},
+  {s:'Ds', n:'Darmstadtio',   m:281,     c:'transition'},
+  {s:'Rg', n:'Roentgenio',    m:282,     c:'transition'},
+  {s:'Cn', n:'Copernicio',    m:285,     c:'transition'},
+  {s:'Nh', n:'Nihonio',       m:286,     c:'post-transition'},
+  {s:'Fl', n:'Flerovio',      m:289,     c:'post-transition'},
+  {s:'Mc', n:'Moscovio',      m:290,     c:'post-transition'},
+  {s:'Lv', n:'Livermorio',    m:293,     c:'post-transition'},
+  {s:'Ts', n:'Teneso',        m:294,     c:'halogen'},
+  {s:'Og', n:'Oganesón',      m:294,     c:'noble'},
+];
+
+// ═══════════════════════════════════════════════════
+//  ELECTRON CONFIGURATION (Bohr shells simplified)
+//  Returns array of electrons per shell
+// ═══════════════════════════════════════════════════
+const SHELL_NAMES = ['K','L','M','N','O','P','Q'];
+const SHELL_MAX   = [2, 8, 18, 32, 32, 18, 8]; // simplified outer-fill limits for Bohr
+
+function getShellConfig(Z) {
+  // Use a pre-computed table for accuracy
+  const configs = [
+    [],          // 0  placeholder
+    [1],         // 1  H
+    [2],         // 2  He
+    [2,1],       // 3  Li
+    [2,2],       // 4  Be
+    [2,3],       // 5  B
+    [2,4],       // 6  C
+    [2,5],       // 7  N
+    [2,6],       // 8  O
+    [2,7],       // 9  F
+    [2,8],       // 10 Ne
+    [2,8,1],     // 11 Na
+    [2,8,2],     // 12 Mg
+    [2,8,3],     // 13 Al
+    [2,8,4],     // 14 Si
+    [2,8,5],     // 15 P
+    [2,8,6],     // 16 S
+    [2,8,7],     // 17 Cl
+    [2,8,8],     // 18 Ar
+    [2,8,8,1],   // 19 K
+    [2,8,8,2],   // 20 Ca
+    [2,8,9,2],   // 21 Sc
+    [2,8,10,2],  // 22 Ti
+    [2,8,11,2],  // 23 V
+    [2,8,13,1],  // 24 Cr
+    [2,8,13,2],  // 25 Mn
+    [2,8,14,2],  // 26 Fe
+    [2,8,15,2],  // 27 Co
+    [2,8,16,2],  // 28 Ni
+    [2,8,18,1],  // 29 Cu
+    [2,8,18,2],  // 30 Zn
+    [2,8,18,3],  // 31 Ga
+    [2,8,18,4],  // 32 Ge
+    [2,8,18,5],  // 33 As
+    [2,8,18,6],  // 34 Se
+    [2,8,18,7],  // 35 Br
+    [2,8,18,8],  // 36 Kr
+    [2,8,18,8,1],  // 37 Rb
+    [2,8,18,8,2],  // 38 Sr
+    [2,8,18,9,2],  // 39 Y
+    [2,8,18,10,2], // 40 Zr
+    [2,8,18,12,1], // 41 Nb
+    [2,8,18,13,1], // 42 Mo
+    [2,8,18,13,2], // 43 Tc
+    [2,8,18,15,1], // 44 Ru
+    [2,8,18,16,1], // 45 Rh
+    [2,8,18,18],   // 46 Pd
+    [2,8,18,18,1], // 47 Ag
+    [2,8,18,18,2], // 48 Cd
+    [2,8,18,18,3], // 49 In
+    [2,8,18,18,4], // 50 Sn
+    [2,8,18,18,5], // 51 Sb
+    [2,8,18,18,6], // 52 Te
+    [2,8,18,18,7], // 53 I
+    [2,8,18,18,8], // 54 Xe
+    [2,8,18,18,8,1],   // 55 Cs
+    [2,8,18,18,8,2],   // 56 Ba
+    [2,8,18,18,9,2],   // 57 La
+    [2,8,18,19,9,2],   // 58 Ce
+    [2,8,18,21,8,2],   // 59 Pr
+    [2,8,18,22,8,2],   // 60 Nd
+    [2,8,18,23,8,2],   // 61 Pm
+    [2,8,18,24,8,2],   // 62 Sm
+    [2,8,18,25,8,2],   // 63 Eu
+    [2,8,18,25,9,2],   // 64 Gd
+    [2,8,18,27,8,2],   // 65 Tb
+    [2,8,18,28,8,2],   // 66 Dy
+    [2,8,18,29,8,2],   // 67 Ho
+    [2,8,18,30,8,2],   // 68 Er
+    [2,8,18,31,8,2],   // 69 Tm
+    [2,8,18,32,8,2],   // 70 Yb
+    [2,8,18,32,9,2],   // 71 Lu
+    [2,8,18,32,10,2],  // 72 Hf
+    [2,8,18,32,11,2],  // 73 Ta
+    [2,8,18,32,12,2],  // 74 W
+    [2,8,18,32,13,2],  // 75 Re
+    [2,8,18,32,14,2],  // 76 Os
+    [2,8,18,32,15,2],  // 77 Ir
+    [2,8,18,32,17,1],  // 78 Pt
+    [2,8,18,32,18,1],  // 79 Au
+    [2,8,18,32,18,2],  // 80 Hg
+    [2,8,18,32,18,3],  // 81 Tl
+    [2,8,18,32,18,4],  // 82 Pb
+    [2,8,18,32,18,5],  // 83 Bi
+    [2,8,18,32,18,6],  // 84 Po
+    [2,8,18,32,18,7],  // 85 At
+    [2,8,18,32,18,8],  // 86 Rn
+    [2,8,18,32,18,8,1],// 87 Fr
+    [2,8,18,32,18,8,2],// 88 Ra
+    [2,8,18,32,18,9,2],// 89 Ac
+    [2,8,18,32,18,10,2],// 90 Th
+    [2,8,18,32,20,9,2], // 91 Pa
+    [2,8,18,32,21,9,2], // 92 U
+    [2,8,18,32,22,9,2], // 93 Np
+    [2,8,18,32,24,8,2], // 94 Pu
+    [2,8,18,32,25,8,2], // 95 Am
+    [2,8,18,32,25,9,2], // 96 Cm
+    [2,8,18,32,27,8,2], // 97 Bk
+    [2,8,18,32,28,8,2], // 98 Cf
+    [2,8,18,32,29,8,2], // 99 Es
+    [2,8,18,32,30,8,2], // 100 Fm
+    [2,8,18,32,31,8,2], // 101 Md
+    [2,8,18,32,32,8,2], // 102 No
+    [2,8,18,32,32,9,2], // 103 Lr
+    [2,8,18,32,32,10,2],// 104 Rf
+    [2,8,18,32,32,11,2],// 105 Db
+    [2,8,18,32,32,12,2],// 106 Sg
+    [2,8,18,32,32,13,2],// 107 Bh
+    [2,8,18,32,32,14,2],// 108 Hs
+    [2,8,18,32,32,15,2],// 109 Mt
+    [2,8,18,32,32,17,1],// 110 Ds
+    [2,8,18,32,32,18,1],// 111 Rg
+    [2,8,18,32,32,18,2],// 112 Cn
+    [2,8,18,32,32,18,3],// 113 Nh
+    [2,8,18,32,32,18,4],// 114 Fl
+    [2,8,18,32,32,18,5],// 115 Mc
+    [2,8,18,32,32,18,6],// 116 Lv
+    [2,8,18,32,32,18,7],// 117 Ts
+    [2,8,18,32,32,18,8],// 118 Og
+  ];
+  return configs[Z] || [];
+}
+
+// Shell colors (K→Q)
+const SHELL_COLORS = [
+  '#f472b6', // K - pink
+  '#818cf8', // L - indigo
+  '#34d399', // M - emerald
+  '#fbbf24', // N - amber
+  '#60a5fa', // O - blue
+  '#a78bfa', // P - violet
+  '#fb7185', // Q - rose
+];
+
+// ═══════════════════════════════════════════════════
+//  STARFIELD
+// ═══════════════════════════════════════════════════
+(function initStars() {
+  const canvas = document.getElementById('starfield');
+  const ctx = canvas.getContext('2d');
+  const stars = [];
+  let W, H;
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  for (let i = 0; i < 180; i++) {
+    stars.push({
+      x: Math.random(),
+      y: Math.random(),
+      r: Math.random() * 1.2 + 0.2,
+      a: Math.random(),
+      da: (Math.random() - .5) * 0.003,
+    });
+  }
+
+  function drawStars() {
+    ctx.clearRect(0, 0, W, H);
+    for (const s of stars) {
+      s.a += s.da;
+      if (s.a < 0.05) s.da = Math.abs(s.da);
+      if (s.a > 1)    s.da = -Math.abs(s.da);
+      ctx.beginPath();
+      ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(148,163,184,${s.a * 0.7})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(drawStars);
+  }
+  drawStars();
+})();
+
+// ═══════════════════════════════════════════════════
+//  ATOM RENDERER
+// ═══════════════════════════════════════════════════
+const canvas  = document.getElementById('atomCanvas');
+const ctx     = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+const CX = W / 2, CY = H / 2;
+
+let currentZ  = null;
+let shells    = [];
+let electrons = [];   // [{shellIdx, angle, speed, orbitR, color}]
+let animating = true;
+let speedMul  = 1;
+let rafId     = null;
+let particleTrails = [];
+
+function toggleAnim() {
+  animating = document.getElementById('animToggle').checked;
+  if (animating && !rafId) startRender();
+}
+function updateSpeed() {
+  speedMul = parseFloat(document.getElementById('speedSlider').value);
+  document.getElementById('speedVal').textContent = speedMul.toFixed(1) + '×';
+}
+
+function startRender() {
+  if (rafId) cancelAnimationFrame(rafId);
+  function loop() {
+    drawAtom();
+    if (animating) rafId = requestAnimationFrame(loop);
+    else rafId = null;
+  }
+  rafId = requestAnimationFrame(loop);
+}
+
+// ───────────────────────────────────────────────────
+//  Build the atom from Z
+// ───────────────────────────────────────────────────
+function buildAtom() {
+  const inp = document.getElementById('atomicInput');
+  const Z = parseInt(inp.value, 10);
+  const errEl = document.getElementById('errorMsg');
+
+  if (!Z || Z < 1 || Z > 118) {
+    errEl.style.display = 'block';
+    return;
+  }
+  errEl.style.display = 'none';
+
+  currentZ = Z;
+  shells   = getShellConfig(Z);
+  const el = ELEMENTS[Z];
+
+  // Calculate neutrons from rounded mass
+  const neutrons = Math.round(el.m) - Z;
+
+  // Show main grid
+  document.getElementById('mainGrid').style.display = 'grid';
+  document.getElementById('emptyState').style.display = 'none';
+
+  // Update info panel
+  document.getElementById('elSymbol').textContent  = el.s;
+  document.getElementById('elName').textContent    = el.n;
+  document.getElementById('elAtomic').textContent  = `Z = ${Z}  ·  ${categoryLabel(el.c)}`;
+  document.getElementById('statP').textContent     = Z;
+  document.getElementById('statN').textContent     = neutrons;
+  document.getElementById('statE').textContent     = Z;
+  document.getElementById('statM').textContent     = el.m.toFixed(3);
+
+  // Shell legend
+  const legendEl = document.getElementById('shellLegend');
+  legendEl.innerHTML = '';
+  shells.forEach((count, i) => {
+    const row = document.createElement('div');
+    row.className = 'shell-row';
+    row.innerHTML = `
+      <div class="shell-dot" style="background:${SHELL_COLORS[i]};box-shadow:0 0 6px ${SHELL_COLORS[i]}66"></div>
+      <div class="shell-label">Capa ${SHELL_NAMES[i]} &nbsp;<span style="color:#475569;font-size:.7rem">(n=${i+1})</span></div>
+      <div class="shell-count" style="color:${SHELL_COLORS[i]}">${count} e⁻</div>
+    `;
+    legendEl.appendChild(row);
+  });
+
+  // Electron configuration string
+  const shellLetters = ['1s','2s,2p','3s,3p,3d','4s,4p,4d,4f','5s,5p,5d,5f','6s,6p','7s'];
+  let cfg = shells.map((n,i) => `[${SHELL_NAMES[i]}]=${n}`).join('  ');
+  document.getElementById('configStr').textContent = cfg;
+
+  // Build electron objects
+  electrons = [];
+  const numShells = shells.length;
+  const minR  = 52;   // nucleus radius offset
+  const step  = Math.min(62, (CX - minR - 26) / Math.max(numShells, 1));
+
+  shells.forEach((count, si) => {
+    const orbitR = minR + step * (si + 1);
+    const baseSpeed = (0.008 - si * 0.0006) * (si < 4 ? 1 : 0.7);
+    for (let ei = 0; ei < count; ei++) {
+      electrons.push({
+        shellIdx : si,
+        angle    : (2 * Math.PI / count) * ei,
+        speed    : baseSpeed,
+        orbitR   : orbitR,
+        color    : SHELL_COLORS[si],
+        trail    : [],
+      });
+    }
+  });
+
+  particleTrails = [];
+  startRender();
+}
+
+function categoryLabel(c) {
+  const map = {
+    'alkali':'Metal Alcalino','alkaline':'Metal Alcalinotérreo','transition':'Metal de Transición',
+    'post-transition':'Metal Post-transición','metalloid':'Metaloide','nonmetal':'No Metal',
+    'halogen':'Halógeno','noble':'Gas Noble','lanthanide':'Lantánido','actinide':'Actínido'
+  };
+  return map[c] || c;
+}
+
+// ───────────────────────────────────────────────────
+//  DRAW
+// ───────────────────────────────────────────────────
+function drawAtom() {
+  ctx.clearRect(0, 0, W, H);
+
+  if (!currentZ) return;
+
+  const Z = currentZ;
+  const el = ELEMENTS[Z];
+  const neutrons = Math.round(el.m) - Z;
+  const numShells = shells.length;
+
+  const minR = 52;
+  const step = Math.min(62, (CX - minR - 26) / Math.max(numShells, 1));
+
+  // ── Draw orbits ──
+  shells.forEach((_, si) => {
+    const r = minR + step * (si + 1);
+    ctx.beginPath();
+    ctx.arc(CX, CY, r, 0, Math.PI * 2);
+    ctx.strokeStyle = `${SHELL_COLORS[si]}30`;
+    ctx.lineWidth   = 1;
+    ctx.setLineDash([4, 6]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Shell label
+    ctx.font = `bold 10px 'Orbitron', monospace`;
+    ctx.fillStyle = `${SHELL_COLORS[si]}88`;
+    ctx.fillText(SHELL_NAMES[si], CX + r * 0.71, CY - r * 0.71);
+  });
+
+  // ── Draw nucleus ──
+  const nucR = Math.min(40, 18 + Math.sqrt(Z) * 2.2);
+
+  // Nucleus glow layers
+  for (let g = 4; g >= 0; g--) {
+    const gR = nucR + g * 6;
+    const alpha = (5 - g) * 0.04;
+    ctx.beginPath();
+    ctx.arc(CX, CY, gR, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(248,113,113,${alpha})`;
+    ctx.fill();
+  }
+
+  // Nucleus base
+  const nucGrad = ctx.createRadialGradient(CX - nucR*0.3, CY - nucR*0.3, 2, CX, CY, nucR);
+  nucGrad.addColorStop(0, '#fca5a5');
+  nucGrad.addColorStop(0.5, '#ef4444');
+  nucGrad.addColorStop(1, '#7f1d1d');
+  ctx.beginPath();
+  ctx.arc(CX, CY, nucR, 0, Math.PI * 2);
+  ctx.fillStyle = nucGrad;
+  ctx.fill();
+
+  // Nucleus particles (protons + neutrons visualization)
+  const total  = Z + neutrons;
+  const pRadius = Math.max(2, Math.min(6, nucR / (Math.sqrt(total) * 0.8)));
+  for (let i = 0; i < Math.min(total, 48); i++) {
+    const isP = i < Z;
+    const angle = (i / Math.min(total, 48)) * Math.PI * 2 * 3.7 + i;
+    const dist  = (i / Math.min(total, 48)) * (nucR - pRadius - 2);
+    const px = CX + Math.cos(angle) * dist;
+    const py = CY + Math.sin(angle) * dist;
+    ctx.beginPath();
+    ctx.arc(px, py, pRadius, 0, Math.PI * 2);
+    ctx.fillStyle = isP ? '#fbbf24' : '#94a3b8';
+    ctx.fill();
+  }
+
+  // Nucleus text
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  if (nucR > 22) {
+    ctx.font = `bold ${Math.min(13, nucR * 0.4)}px 'Orbitron', monospace`;
+    ctx.fillStyle = '#fff';
+    ctx.shadowBlur = 4; ctx.shadowColor = '#000';
+    ctx.fillText(el.s, CX, CY - 5);
+    ctx.font = `${Math.min(9, nucR * 0.28)}px 'Rajdhani', sans-serif`;
+    ctx.fillText(`${Z}p · ${neutrons}n`, CX, CY + 8);
+    ctx.shadowBlur = 0;
+  }
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'alphabetic';
+
+  // ── Update & draw electrons ──
+  electrons.forEach(e => {
+    if (animating) e.angle += e.speed * speedMul;
+
+    const ex = CX + Math.cos(e.angle) * e.orbitR;
+    const ey = CY + Math.sin(e.angle) * e.orbitR;
+
+    // Trail
+    e.trail.push({x: ex, y: ey, a: 0.6});
+    if (e.trail.length > 14) e.trail.shift();
+    e.trail.forEach((t, ti) => {
+      const frac = ti / e.trail.length;
+      ctx.beginPath();
+      ctx.arc(t.x, t.y, 2.5 * frac, 0, Math.PI * 2);
+      ctx.fillStyle = `${e.color}${Math.floor(frac * 80).toString(16).padStart(2,'0')}`;
+      ctx.fill();
+    });
+
+    // Electron glow
+    const grad = ctx.createRadialGradient(ex, ey, 0, ex, ey, 8);
+    grad.addColorStop(0, `${e.color}ff`);
+    grad.addColorStop(0.4, `${e.color}88`);
+    grad.addColorStop(1, `${e.color}00`);
+    ctx.beginPath();
+    ctx.arc(ex, ey, 8, 0, Math.PI * 2);
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Electron core
+    ctx.beginPath();
+    ctx.arc(ex, ey, 3.5, 0, Math.PI * 2);
+    ctx.fillStyle = '#fff';
+    ctx.shadowBlur = 6;
+    ctx.shadowColor = e.color;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  });
+
+  // ── Decorative ring ──
+  const outerR = shells.length > 0 ? minR + step * shells.length + 18 : 80;
+  ctx.beginPath();
+  ctx.arc(CX, CY, outerR, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(129,140,248,0.06)';
+  ctx.lineWidth = 12;
+  ctx.stroke();
+
+  if (!animating) return;
+}
+
+// ───────────────────────────────────────────────────
+//  Keyboard shortcut: Enter to build
+// ───────────────────────────────────────────────────
+document.getElementById('atomicInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') buildAtom();
+});
+
+function quickSet(z) {
+  document.getElementById('atomicInput').value = z;
+  buildAtom();
+}
+
+// Initial empty draw
+drawAtom();
+</script>
+</body>
+</html>
