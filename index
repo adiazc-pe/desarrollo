@@ -51,6 +51,7 @@ const SEQUENCES={
 };
 const QUESTIONS=['¿Qué se ha observado en el expediente?','¿Por qué se solicita esa corrección?','¿Qué corrección prepararía?','¿Qué documentos presentaría y qué sustenta cada uno?'];
 
+
 let session=null,stage='setup',view='session',draft=['','','',''],round=0,records=[],events=[],clockStart=null,elapsed=0,paused=false,help=0,dirty=false,manualPause=false;
 let setup={code:'',role:'Residente de obra',kind:'ensayo',seq:'S1',checked:false,eligible:false,consent:false};
 const app=document.getElementById('app');
