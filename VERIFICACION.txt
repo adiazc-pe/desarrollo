@@ -1,0 +1,18 @@
+VERIFICACIÓN TÉCNICA · S10 / 2.1
+PASS: cuatro secuencias completas; formularios; pausa/retorno; conservación al editar; solicitudes de ayuda; evaluación manual; exportaciones JSON/CSV; caracteres escapados; reinicio y retiro; configuración de material; elegibilidad y revisión técnica requeridas para prueba real.
+Navegador Chrome de previsualización: recorrido de ensayo desde configuración hasta los dos casos registrados. Distribución de escritorio inspeccionada visualmente.
+Las pruebas DOM usan jsdom y comprueban el contenido generado para exportar; no verifican por sí mismas la escritura de descargas en todas las configuraciones de Windows. Confirme Descargas en el ensayo local antes de sesiones.
+No hay resultados de usuarios en este paquete. Las respuestas sintéticas se usan solo en tests y no se precargan en el HTML. No se acredita validez técnica de casos, equivalencia entre ellos, mejora de comprensión ni hipótesis validada.
+
+REVISIÓN S11 · VERSIÓN 2.1.1-S11-QA
+Incidencia detectada: pattern HTML de códigos con guion dentro de clase de caracteres. La prueba inicial admitió P 01 indebidamente. Se corrigieron los campos de participante y revisor con una expresión compatible.
+Repetición: once comprobaciones adicionales superadas; suite de las cuatro secuencias nuevamente superada. Chrome: P 01 rechazado por patternMismatch y QA-01_S11 permitió iniciar.
+Cronómetro: prueba automatizada con reloj controlado y eventos simulados de visibilidad; no es medición humana ni validación temporal en todas las PC.
+Exportación: estructura JSON/CSV comprobada en memoria; descarga física y lectura en la PC objetivo pendientes.
+Clasificación: B, preparado con restricciones para una prueba controlada. Antes de participantes: ratificar hipótesis, umbral y protocolo; validar casos/pauta/equivalencia con especialista; establecer elegibilidad y privacidad; ensayar exportación local. No acredita ventaja institucional ni hipótesis validada.
+
+ACTUALIZACIÓN 2.2.0 · 2026-11-07
+Ejecutado npm test con jsdom: superadas cuatro secuencias completas y trece comprobaciones adicionales, incluidas la exigencia de acuerdo técnico y la distinción entre revisión declarada y calibración no comprobada. La primera ejecución detectó una expectativa de mensaje antiguo en el test; se actualizó a la nueva condición de acuerdo técnico y se repitió satisfactoriamente la suite.
+Chrome: recorrido de ensayo completo desde inicio hasta ambos casos registrados; ficha estructurada inspeccionada visualmente a resolución de escritorio. Respuestas sintéticas de QA, no feedback de participantes.
+No se han ejecutado pruebas con usuarios ni se ha confirmado disponibilidad de participantes. Descarga física en PC objetivo, equivalencia de dificultad, fidelidad institucional y pauta acordada pendientes.
+Se mantiene clasificación B: utilizable con restricciones declaradas. La declaración de acuerdo habilita la prueba real, pero la aplicación no verifica externamente su autenticidad.

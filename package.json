@@ -1,0 +1,1 @@
+{"name":"observa-s10-hs01","version":"2.2.0","private":true,"description":"Pruebas técnicas opcionales; el HTML no necesita instalación","scripts":{"test":"node tests/recorrido.cjs && node tests/adicionales-s11.cjs"},"devDependencies":{"jsdom":"30.1.3"}}

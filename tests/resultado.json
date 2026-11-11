@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "checks": [
+    "Bloqueo de prueba real sin revisión técnica declarada",
+    "S1: recorrido de 2 casos, validaciones, pausa, retorno, ayuda, escape de texto, evaluación manual, exportaciones y reinicio",
+    "S2: recorrido de 2 casos, validaciones, pausa, retorno, ayuda, escape de texto, evaluación manual, exportaciones y reinicio",
+    "S3: recorrido de 2 casos, validaciones, pausa, retorno, ayuda, escape de texto, evaluación manual, exportaciones y reinicio",
+    "S4: recorrido de 2 casos, validaciones, pausa, retorno, ayuda, escape de texto, evaluación manual, exportaciones y reinicio",
+    "Retiro elimina sesión y respuestas",
+    "Configuración: declaración institucional obligatoria y texto escapado",
+    "Elegibilidad obligatoria para prueba real"
+  ],
+  "limitation": "Pruebas DOM con jsdom; resultados de ensayo técnico. No son pruebas con usuarios ni validación de HS01."
+}

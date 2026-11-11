@@ -1,0 +1,61 @@
+OBSERVA · MVP S10 · GORE AYACUCHO
+Versión 2.2.0-ACUERDO-TECNICO
+
+ABRIR Y USAR
+1. Extraiga todo el ZIP en una carpeta de su PC.
+2. Abra MVP_S10_GORE_Ayacucho.html con Chrome o Edge actualizados.
+3. No requiere instalación, servidor, cuenta ni conexión a internet.
+4. Consulte «Guía de la tribu». Pruebe primero como «Ensayo técnico».
+5. Para una sesión con una persona, confirme elegibilidad, acuerdo técnico entre evaluadores y consentimiento voluntario.
+6. Asigne previamente S1, S2, S3 o S4. No elija según habilidad. Cada persona interpreta dos casos, uno por formato.
+7. La persona lee, responde cuatro preguntas, revisa/edita y registra. Repite con otro caso.
+8. Fuera de la vista del participante, abra Facilitador y valore los cuatro componentes. Registre ayuda real, errores críticos, revisor y notas. Guarde cada evaluación.
+9. Descargue JSON y CSV; compruebe que estén en Descargas y llévelos a una carpeta autorizada.
+10. Inicie «Nueva sesión». Al cerrar o recargar se pierden las respuestas no exportadas.
+
+UNA SOLA TAREA
+Interpretar qué se observó, por qué se requiere una corrección, qué corregir y qué evidencia presentar. Puede consultar el texto mientras responde. No hay un mínimo de caracteres; «no sé» es una respuesta válida para registrar, no un éxito.
+
+PROCEDIMIENTO DEL OPERADOR
+Antes: ratifique HS01, pauta y umbral; calibre los dos casos con un especialista; verifique correspondencia del comparador y dificultad; defina participantes, responsables, conservación y eliminación de datos. No seleccione roles por cargo solamente: deben preparar o coordinar subsanaciones.
+Durante: use la misma consigna, no muestre pautas ni sugiera respuestas. Anote cada incidencia en Ficha_observacion.csv (plantilla vacía). Registre la solicitud con el botón y documente si realmente dio orientación. Si solo resolvió una incidencia de uso, distíngala de ayuda técnica. No grabe audio o video con esta aplicación.
+Después: transcriba las notas al caso correspondiente, separando conducta observada, declaración e interpretación. Valore 0=incorrecta/no identifica, 1=parcial, 2=completa. Una persona debe cotejar cada respuesta con la pauta. Un segundo revisor resuelve discrepancias, preferiblemente sin conocer el formato. El MVP tiene un campo de revisor por caso; documente el acuerdo adicional en notas o fuera de la aplicación.
+La solicitud de ayuda NO equivale a ayuda recibida. El resultado individual exige cuatro puntuaciones 2, ausencia de ayuda sustantiva confirmada por observación y ausencia de error crítico. Un registro de ayuda no explicado debe aclararse antes de cerrar la valoración.
+La aplicación no autentica identidades ni acredita que una sesión realmente ocurrió. El equipo conserva el contexto y consentimiento.
+
+REFERENCIA Y UMBRAL
+HS01: la presentación estructurada mejora la interpretación autónoma frente a una referencia pertinente. No está validada por la construcción.
+Los casos incluidos son ficticios, no normas ni expedientes oficiales. Ambas presentaciones conservan literalmente el mismo texto; solo se añaden títulos en la ficha. Así se explora el efecto de la organización, no una simplificación del lenguaje.
+No se ha demostrado equivalencia de dificultad entre A y B. Comparar ejemplos ficticios no demuestra superioridad frente al proceso habitual del GORE. Para esa afirmación se requiere una referencia institucional autorizada, anonimizada y fiel. Configurar casos es opcional y debe hacerse antes de las sesiones; no cambie el material dentro de una ronda sin nueva versión. La configuración no persiste al cerrar ni puede importarse.
+Se conserva el umbral propuesto: con ocho pares completos, al menos 7/8 éxitos con ficha, dos éxitos netos adicionales frente al continuo y ausencia de errores críticos perjudiciales. La tribu debe ratificar y justificarlo ANTES de ejecutar. No es un estándar ni prueba estadística. Si faltan pares, no concluir el criterio grupal ni reemplazar selectivamente fracasos. Consolidación manual fuera del MVP; excluir ensayos.
+
+FUNCIONA REALMENTE
+Formularios, navegación, revisión/edición, cuatro secuencias, validaciones, pausa, registro de solicitudes, evaluación humana, exportación JSON/CSV, retiro y reinicio. Tiempo activo incluye lectura/escritura/revisión; excluye pausa manual y pestaña oculta; no es duración del trámite.
+
+SIMULACIÓN Y LÍMITES
+Simulados: los dos casos precargados y la referencia continua construida.
+No incluidos: adjuntos, cálculo de ampliación, expediente completo, aprobación técnica, seguimiento institucional, SGD, firma digital, autenticación, guardado automático, importación, consolidación grupal y calificación por IA.
+El HTML funciona localmente sin solicitudes a servidores. La vista del facilitador no tiene contraseña. No ingrese nombres, DNI, datos reales reservados ni credenciales. Si la persona retira consentimiento, elimine también las copias exportadas. Proteja físicamente el equipo y limite acceso a los archivos. El archivo exportado no es una auditoría institucional inalterable.
+
+ARCHIVOS PARA MANTENIMIENTO
+MVP_S10_GORE_Ayacucho.html: archivo autónomo para abrir.
+src/template.html: estructura.
+src/styles.css: presentación adaptable al escritorio.
+src/01-casos.js: casos, pautas, secuencias y preguntas.
+src/02-aplicacion.js: estado, navegación, validaciones, registro y exportación.
+src/03-guia.js: guía del experimento.
+src/04-configuracion.js: configuración opcional del material.
+src/05-inicio.js: inicialización y eventos de visibilidad.
+build.py: ensambla HTML con Python 3 estándar. Ejecute: python build.py
+No edite el HTML generado si desea conservar cambios reproducibles: edite src y reconstruya.
+dist/index.html: misma aplicación para una previsualización local.
+tests/recorrido.cjs y package.json: comprobaciones automatizadas DOM opcionales. Para desarrolladores: npm install; npm test. No se necesita Node ni Python para utilizar el HTML.
+VERIFICACION.txt y tests/resultado.json: alcance y resultados de pruebas técnicas, NO evidencia de personas.
+
+REUTILIZACIÓN
+Se conserva el concepto de observación en cuatro componentes de E2, la identidad Observa y los tonos suaves, consulta mientras se responde, revisión y edición, mensajes que separan registro de aprobación y exportación local. Se reutiliza el MVP HS01 v2 y se organiza su código. S10 precisa elegibilidad y separa solicitud de ayuda de orientación recibida; no cambia el umbral propuesto.
+
+ACUERDOS INCORPORADOS EN 2.2.0
+Antes de evaluar comprensión, los evaluadores deben usar los mismos antecedentes y acordar suficiencia y errores críticos. Si existe desacuerdo de fondo sin resolver, priorizar HS05. La casilla de inicio real registra una declaración del facilitador, no acredita una revisión independiente. El JSON distingue technicalAgreementDeclared (declarado) y caseCalibrationDeclared=null (equivalencia de dificultad no comprobada). No se afirma que HS05 institucional esté validada.
+Comprensión correcta en un caso no demuestra ventaja comparativa de HS01. La falta de un documento debe anotarse separada de una interpretación incorrecta. HS02 evalúa pertinencia y vinculación del sustento, no acredita automáticamente disponibilidad documental.
+Si ambos formatos funcionan igual, no recomendar sustituir el habitual solo por presentación. Investigar barreras documentales o criterios técnicos según evidencia. Se conserva el umbral propuesto; los acuerdos de la tribu no son resultados nuevos de participantes.

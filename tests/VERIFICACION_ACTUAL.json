@@ -1,0 +1,14 @@
+{
+  "version": "2.2.0-ACUERDO-TECNICO",
+  "fecha": "2026-11-07",
+  "tipo": "QA técnico; no evidencia con usuarios",
+  "suite_recorrido": "SUPERADA; cuatro secuencias y controles",
+  "suite_adicionales": "13 comprobaciones superadas",
+  "chrome": "Recorrido de ensayo con los dos casos completado",
+  "pendiente": [
+    "descarga física en PC objetivo",
+    "acuerdo técnico real de evaluadores",
+    "equivalencia de casos",
+    "validación con usuarios"
+  ]
+}

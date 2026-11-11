@@ -1,0 +1,49 @@
+{
+  "tipo": "Comprobación técnica automatizada DOM; no investigación con personas",
+  "checks": [
+    {
+      "caso": "Código vacío y código con espacios bloqueados",
+      "estado": "SUPERADA"
+    },
+    {
+      "caso": "Consentimiento ausente bloquea inicio",
+      "estado": "SUPERADA"
+    },
+    {
+      "caso": "No sé admitido y espacios solos rechazados",
+      "estado": "SUPERADA"
+    },
+    {
+      "caso": "Mismo texto y orden en ambos formatos",
+      "estado": "SUPERADA"
+    },
+    {
+      "caso": "Tiempo activo excluye pausa y pestaña oculta",
+      "estado": "SUPERADA"
+    },
+    {
+      "caso": "Evaluación incompleta no obtiene resultado favorable",
+      "estado": "SUPERADA"
+    },
+    {
+      "caso": "Error crítico exige notas y nunca obtiene éxito",
+      "estado": "SUPERADA"
+    },
+    {
+      "caso": "Solicitud sin orientación no se confunde con ayuda recibida",
+      "estado": "SUPERADA"
+    },
+    {
+      "caso": "Código del revisor rechaza espacios y permite guion",
+      "estado": "SUPERADA"
+    },
+    {
+      "caso": "Reinicio limpia consentimiento y elegibilidad",
+      "estado": "SUPERADA"
+    },
+    {
+      "caso": "Sin recursos externos ni llamadas de red en código",
+      "estado": "SUPERADA"
+    }
+  ]
+}
